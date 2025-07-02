@@ -1,9 +1,9 @@
 # Minatsuki-Pro-Drums-Plus
 This is an update for the Minatsuki python script that allows the PS4 Rock Band 4 drums to work with the pro cymbals. 
 
-This update allows for the pro drums to work natively in emulators as and xinput (xbox 360) controller. It also allows for the drums to be used as a midi controller for prgrams that accept the velocity control of the pads and cymbals (such as DAW like Ableton, Pro Tools, Waveform, etc.)
+This update allows for the pro drums to work natively in emulators as an xinput (xbox 360) controller. It also allows for the drums to be used as a midi controller for prgrams that accept the velocity control of the pads and cymbals (such as DAWs like Ableton, Pro Tools, Waveform, etc.)
 
-The majority of the credit for this should go to yanagiragi who made the original python script that allows for keyboard input, as well as to 
+The majority of the credit for this should go to yanagiragi who made the original python script that allows for keyboard inp, as well as to 
 yannbouteiller who made the vgamepad library for python and rdoursenaud who made the midi library mido for python.
 
 Install Instructions (these can also be found in the Python Installer Options text file)
@@ -25,7 +25,7 @@ I also highly recommend updating your drums firmware. If you have the MadCatz dr
 
 **Keyboard**
 
-This will allow you to use the keyboard inputs by running the main.py script, which will work with clone hero and many other rhythm games
+This will allow you to use the drum kit as a keyboard output by running the main.py script, which will work with clone hero and many other rhythm games
 
 In a terminal that is opened by shift clicking in this folder, or alternatively just the default location of your terminal if you dropped the files there, run this script to start the keyboard output:
 
