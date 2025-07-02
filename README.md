@@ -53,6 +53,8 @@ For the cymbals seperated as individual xinput buttons run this script:
 
 Then select the corresponding number for your drum controller
 
+(For some reason in RPCS3 the right d-pad button is registered as RB, but this is not the case with any other application. Currently the only way to trigger the right d-pad in Rock Band 3 is to push down and right)
+
 **Midi**
 
 For Midi use the setup is a bit more involved, but it does allow for the velocity of the instruments to be used which opens it up to more applications (I mostly made this for me to play around with using the drum kit in Ableton, but it could have several applications as Midi is a much more widely accepted format and it allows for velocity). You will need to run this in your python terminal once everything is set up:
