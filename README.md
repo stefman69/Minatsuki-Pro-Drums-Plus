@@ -3,8 +3,7 @@ This is an update for the Minatsuki python script that allows the PS4 Rock Band 
 
 This update allows for the pro drums to work natively in emulators as an xinput (xbox 360) controller. It also allows for the drums to be used as a midi controller for prgrams that accept the velocity control of the pads and cymbals (such as DAWs like Ableton, Pro Tools, Waveform, etc.)
 
-The majority of the credit for this should go to yanagiragi who made the original python script that allows for keyboard inp, as well as to 
-yannbouteiller who made the vgamepad library for python and rdoursenaud who made the midi library mido for python.
+The majority of the credit for this should go to yanagiragi who made the original python script that allows for keyboard inp, as well as to yannbouteiller who made the vgamepad library for python and rdoursenaud who made the midi library mido for python.
 
 Install Instructions (these can also be found in the Python Installer Options text file)
 
@@ -16,7 +15,7 @@ For any of this to work (except for the keyboard functions) you will need both t
 
 **Python install scripts**
 
-For all options you will need to install Minatsuki's required python libraries, open the folder containing these files in a python terminal, such as the windows native terminal (or alternatively drop all files into c:\users\(your computers user name) or whatever the default location is in your terminal) You will also need the latest version of python installed on your computer. Once that is done run this in the terminal in the folder containing requirements.txt:
+For all options you will need to install Minatsuki's required python libraries, open the folder containing these files in a python terminal, such as the windows native terminal (or alternatively drop all files into c:\users\(your computers user name) or whatever the default location is in your terminal) You will also need the latest version of python installed on your computer. Once that is done run this in the terminal by shift+righ clicking in the folder containing requirements.txt:
 
 `pip install -r requirements.txt`
 
@@ -27,7 +26,7 @@ I also highly recommend updating your drums firmware. If you have the MadCatz dr
 
 This will allow you to use the drum kit as a keyboard output by running the main.py script, which will work with clone hero and many other rhythm games
 
-In a terminal that is opened by shift clicking in this folder, or alternatively just the default location of your terminal if you dropped the files there, run this script to start the keyboard output:
+In a terminal that is opened by shift+right clicking in the folder containg the original Minatsuki files, or alternatively just the default location of your terminal if you dropped the files there, run this script to start the keyboard output:
 
 `python main.py`
 
@@ -40,7 +39,7 @@ For gamepad use run this in your python terminal (recommended for programs like 
 
 `pip install vgamepad`
 
-There are two options for running the script with gamepad inputs. main_xinput.py emulates the Xbox360 pad setup where the cymbals are picked up using a combination of buttons (this is necessary for RPCS3 pro drums on Rock Band 3) The other option, main_xinputcs.py, splits the cymbals into different individual outputs just like the keyboard version, but this will output as buttons on an xinput controller instead.
+There are two options for running the script with gamepad inputs. main_xinput.py emulates the Xbox360 pad setup where the cymbals are picked up using a combination of buttons (this is necessary for RPCS3 pro drums on Rock Band 3) The other option, main_xinputcs.py, splits the cymbals into different individual outputs just like the keyboard version, but this will output as buttons on an xinput controller instead. Make sure both of these files are in the same folder as the files from the Minatsuki github pages, or are all in your computers user folder. 
 
 For combined cymbal modifier hits run this script: 
 
@@ -65,10 +64,12 @@ For Midi use the setup is significantly more involved, but it does allow for the
 You will also need to install a virtual midi device, which I set this up using loopmidi. You will need to need to name the device Virtual Drum Kit and press the plus button in the softwatre. Be sure that you open this application before running your python script. You can find loopmidi here:
 https://www.tobias-erichsen.de/software/loopmidi.html
 
-Once everything is properly set up you can run this in the target folder opened in terminal:
+Once everything is properly set up, and both the files from the original Minatsuki github and this page are in the same folder or all in your windows user folder, you can run this in the target folder opened in terminal:
 
 `python main_midi.py`
 
 Then select the corresponding number for your drum controller
+
+One caveat to the midi implementation is that there is no way to use the face buttons without breaking the toms and cymbals. If you really want to use the face buttons to be functinal you can use either of the xinput modules. This setup is primarily intended for use with music production software, however it may be useful for rhythm games that can accept velocity inputs. 
 
 If you have any questions, I am always availible by Reddit DM's at u/cumbandicoot
