@@ -3,7 +3,7 @@ This is an update for the Minatsuki python script that allows the PS4 Rock Band 
 
 This update allows for the pro drums to work natively in emulators as an xinput (xbox 360) controller. It also allows for the drums to be used as a midi controller for prgrams that accept the velocity control of the pads and cymbals (such as DAWs like Ableton, Pro Tools, Waveform, etc.)
 
-The majority of the credit for this should go to yanagiragi who made the original python script that allows for keyboard inp, as well as to yannbouteiller who made the vgamepad library for python and rdoursenaud who made the midi library mido for python.
+The majority of the credit for this should go to yanagiragi who made the original python script that allows for keyboard input, as well as to yannbouteiller who made the vgamepad library for python and rdoursenaud who made the midi library mido for python.
 
 **Install Instructions** (these can also be found in the Python Installer Options text file)
 
@@ -55,7 +55,7 @@ Then select the corresponding number for your drum controller
 
 **Midi**
 
-For Midi use the setup is significantly more involved, but it does allow for the velocity of the instruments to be used which opens it up to more applications (I mostly made this for me to play around with using the drum kit in Ableton, but it could have several applications as Midi is a much more widely accepted format and it allows for velocity). You will need to run this in your python terminal:
+For Midi use the setup is a bit more involved, but it does allow for the velocity of the instruments to be used which opens it up to more applications (I mostly made this for me to play around with using the drum kit in Ableton, but it could have several applications as Midi is a much more widely accepted format and it allows for velocity). You will need to run this in your python terminal once everything is set up:
 
 `pip install mido python-rtmidi`
 
@@ -70,6 +70,6 @@ Once everything is properly set up, and both the files from the original Minatsu
 
 Then select the corresponding number for your drum controller
 
-One caveat to the midi implementation is that there is no way to use the face buttons without breaking the toms and cymbals. If you really want to use the face buttons to be functinal you can use either of the xinput modules. This setup is primarily intended for use with music production software, however it may be useful for rhythm games that can accept velocity inputs. 
+One caveat to the midi implementation is that there is no way to use the face buttons without breaking the toms and cymbals. If you really want the face buttons to be functinal you can use either of the xinput modules. This setup is primarily intended for use with music production software, however it may also be useful for rhythm games that can accept velocity inputs. 
 
-If you have any questions, I am always availible by Reddit DM's at u/cumbandicoot
+If you have any questions feel fre to ask them here, but given that I don't code that often I may not see it here. However, I am always availible by Reddit DM's at u/cumbandicoot
