@@ -15,7 +15,7 @@ For any of this to work (except for the keyboard functions) you will need both t
 
 **Python install scripts**
 
-For all options you will need to install Minatsuki's required python libraries, open the folder containing these files in a python terminal, such as the windows native terminal (or alternatively drop all files into c:\users\(your computers user name) or whatever the default location is in your terminal) You will also need the latest version of python installed on your computer. Once that is done run this in the terminal by shift+righ clicking in the folder containing requirements.txt:
+For all options you will need to install Minatsuki's required python libraries, open the folder containing these files in a python terminal, such as the windows native terminal (or alternatively drop all files into c:\users\(your computers user name) or whatever the default location is in your terminal) You will also need the latest version of python installed on your computer. Once that is done run this in the terminal by right clicking in the folder and selecting open in terminal where the requirements.txt is:
 
 `pip install -r requirements.txt`
 
@@ -41,7 +41,7 @@ For gamepad use run this in your python terminal (recommended for programs like 
 
 There are two options for running the script with gamepad inputs. main_xinput.py emulates the Xbox360 pad setup where the cymbals are picked up using a combination of buttons (this is necessary for RPCS3 pro drums on Rock Band 3) The other option, main_xinputcs.py, splits the cymbals into different individual outputs just like the keyboard version, but this will output as buttons on an xinput controller instead. Make sure both of these files are in the same folder as the files from the Minatsuki github pages, or are all in your computers user folder. 
 
-For combined cymbal modifier hits run this script: 
+For combined cymbal modifier hits run this script in terminal by right clicking in the folder: 
 
 'pthon main_xinput.py`
 
