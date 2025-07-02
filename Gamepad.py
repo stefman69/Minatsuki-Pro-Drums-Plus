@@ -2,9 +2,7 @@ import time
 import vgamepad as vg
 from enum import IntFlag
 
-
 gamepad = vg.VX360Gamepad()
-
 
 class XUSB_BUTTON(IntFlag):
     XUSB_GAMEPAD_DPAD_UP = 0x0001
@@ -22,7 +20,6 @@ class XUSB_BUTTON(IntFlag):
     XUSB_GAMEPAD_B = 0x2000
     XUSB_GAMEPAD_X = 0x4000
     XUSB_GAMEPAD_Y = 0x8000
-
 
 def PressButton(button):
     if isinstance(button, (list, tuple)):
@@ -45,16 +42,18 @@ def PressButtonOnce(button, duration=0.05):
     time.sleep(duration)
     ReleaseButton(button)
 
+def Update():
+    gamepad.update()
 
 if __name__ == "__main__":
     PressButtonOnce(XUSB_BUTTON.XUSB_GAMEPAD_A)
     time.sleep(0.5)
     PressButton(XUSB_BUTTON.XUSB_GAMEPAD_DPAD_LEFT)
     PressButton(XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
-    gamepad.update()
+    Update()
     time.sleep(0.5)
     ReleaseButton(XUSB_BUTTON.XUSB_GAMEPAD_DPAD_LEFT)
     ReleaseButton(XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
-    gamepad.update()
+    Update()
     gamepad.reset()
-    gamepad.update()
+    Update()
