@@ -30,7 +30,7 @@ In a terminal that is opened by right clicking in the folder containg the origin
 
 `python main.py`
 
-Then Select the last instance of your controller with the corresponding number and press enter.
+Then Select the last instance of your controller (mine says something like MadCatz Rock Band 4 Drums) by typing the corresponding number and press enter.
 
 
 **Gamepad**
