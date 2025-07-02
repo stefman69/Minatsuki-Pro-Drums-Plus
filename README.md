@@ -5,7 +5,7 @@ This update allows for the pro drums to work natively in emulators as an xinput 
 
 The majority of the credit for this should go to yanagiragi who made the original python script that allows for keyboard inp, as well as to yannbouteiller who made the vgamepad library for python and rdoursenaud who made the midi library mido for python.
 
-Install Instructions (these can also be found in the Python Installer Options text file)
+**Install Instructions** (these can also be found in the Python Installer Options text file)
 
 
 **Download Original Minatsuki Files**
