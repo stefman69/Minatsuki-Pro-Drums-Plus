@@ -43,7 +43,7 @@ There are two options for running the script with gamepad inputs. main_xinput.py
 
 For combined cymbal modifier hits run this script in terminal by right clicking in the folder: 
 
-'pthon main_xinput.py`
+`pthon main_xinput.py`
 
 Then select the corresponding number for your drum controller
 
