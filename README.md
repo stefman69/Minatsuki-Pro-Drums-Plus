@@ -41,7 +41,7 @@ For gamepad use run this in your python terminal (recommended for programs like 
 
 There are two options for running the script with gamepad inputs. main_xinput.py emulates the Xbox360 pad setup where the cymbals are picked up using a combination of buttons (this is necessary for RPCS3 pro drums on Rock Band 3) The other option, main_xinputcs.py, splits the cymbals into different individual outputs just like the keyboard version, but this will output as buttons on an xinput controller instead. Make sure both of these files are in the same folder as the files from the Minatsuki github pages, or are all in your computers user folder. 
 
-You may also need to install the ViGEm bus driver for the virtual controller ouput, but since that was already installed before I set this up, I'm not 100% certain wether you do or not. You can download the ViGEm bus driver here: https://vigembusdriver.com/
+You may also need to install the ViGEm bus driver for the virtual controller output, but since that was already installed before I set this up, I'm not 100% certain wether you do or not. You can download the ViGEm bus driver here: https://vigembusdriver.com/
 
 For combined cymbal modifier hits run this script in terminal by right clicking in the folder: 
 
@@ -49,7 +49,7 @@ For combined cymbal modifier hits run this script in terminal by right clicking 
 
 Then select the corresponding number for your drum controller
 
-For the cymbals seperated as individual xinput buttons run this script: 
+For the cymbals separated as individual xinput buttons run this script: 
 
 `python main_xinputcs.py`
 
@@ -76,4 +76,4 @@ Then select the corresponding number for your drum controller
 
 One caveat to the midi implementation is that there is no way to use the face buttons without breaking the toms and cymbals. If you really want the face buttons to be functinal you can use either of the xinput modules. This setup is primarily intended for use with music production software, however it may also be useful for rhythm games that can accept velocity inputs. 
 
-If you have any questions feel fre to ask them here, but given that I don't code that often I may not see it here. However, I am always availible by Reddit DM's at u/cumbandicoot
+If you have any questions feel free to ask them here, but given that I don't code that often I may not see it here. However, I am always availible by Reddit DM's at u/cumbandicoot
