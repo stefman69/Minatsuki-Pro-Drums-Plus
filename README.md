@@ -55,7 +55,6 @@ For the cymbals separated as individual xinput buttons run this script:
 
 Then select the corresponding number for your drum controller
 
-(For some reason in RPCS3 the right d-pad button is registered as RB, but this is not the case with any other application. Currently the only way to trigger the right d-pad in Rock Band 3 is to push down and right)
 
 **Midi**
 
