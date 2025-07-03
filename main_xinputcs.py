@@ -69,8 +69,6 @@ def handle_dpad_and_face_buttons(data, current_pressed):
         72:  Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_B,
         40:  Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_A,
         24:  Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_X,
-        1:   Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER,
-        2:   Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER
     }
 
     analog_val = data[DPAD_BYTE_INDEX]
