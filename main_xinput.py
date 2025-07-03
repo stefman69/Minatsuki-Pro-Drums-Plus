@@ -2,7 +2,6 @@ import Gamepad
 import HIDInput
 import time
 
-prev_input_data = None
 KICK_BYTE_INDEX = 6
 KICK_ACTIVE_VALUE = 1
 GUIDE_BYTE_INDEX = 7
@@ -47,40 +46,24 @@ def handle_music_inputs(data, current_pressed):
 
     kick_val = data[KICK_BYTE_INDEX]
 
-    if kick_val != prev_kick_state:
-        if prev_kick_state == 1:
-            Gamepad.ReleaseButton(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
-        elif prev_kick_state == 2:
-            Gamepad.ReleaseButton(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
-        elif prev_kick_state == 3:
-            Gamepad.ReleaseButton(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
-            Gamepad.ReleaseButton(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
-
-        if kick_val == 1:
-            Gamepad.PressButton(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
-        elif kick_val == 2:
-            Gamepad.PressButton(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
-        elif kick_val == 3:
-            Gamepad.PressButton(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
-            Gamepad.PressButton(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
-
-        prev_kick_state = kick_val
+    if kick_val == 1:  
+        current_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
+    elif kick_val == 2:  
+        current_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
+    elif kick_val == 3:  
+        current_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
+        current_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
 
     for byte_offset, buttons in mapping.items():
         if byte_offset >= len(data):
             continue
-        is_pressed = data[byte_offset] > 0
-        for btn in buttons:
-            if is_pressed and btn not in pressed_buttons:
-                Gamepad.PressButton(btn)
-            elif not is_pressed and btn in pressed_buttons:
-                Gamepad.ReleaseButton(btn)
+        if data[byte_offset] > 0:
+            current_pressed.update(buttons)
 
+    prev_kick_state = kick_val
+    
 def handle_dpad_and_face_buttons(data, current_pressed):
-    global prev_dpad, prev_analog_val, dpad_buttons, last_dpad_val
-
-    analog_val = data[DPAD_BYTE_INDEX]
-    dpad_val = analog_val & 0x0F
+    global prev_dpad, prev_analog_val, dpad_buttons
 
     face_button_map = {
         136: Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_Y,
@@ -104,9 +87,9 @@ def handle_dpad_and_face_buttons(data, current_pressed):
         elif dpad_val == 1:
             new_dpad.update([Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_UP, Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_RIGHT])
         elif dpad_val == 2:
-            new_dpad.update([Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_DOWN, Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_RIGHT])
-        elif dpad_val == 3:
             new_dpad.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_RIGHT)
+        elif dpad_val == 3:
+            new_dpad.update([Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_DOWN, Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_RIGHT])
         elif dpad_val == 4:
             new_dpad.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_DOWN)
         elif dpad_val == 5:
@@ -145,24 +128,9 @@ def handle_control_buttons(data, current_pressed):
 
     if (byte7 & GUIDE_ACTIVE_MASK) != 0:
         current_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_GUIDE)
-        
-# This is for printing input data, as is the second line in the next fuction
-#def debug_print_input_changes(data):
-    #global prev_input_data
-    #if prev_input_data is None:
-        #prev_input_data = list(data)
-        #return
-
-    #for i, (old, new) in enumerate(zip(prev_input_data, data)):
-        #if old != new:
-            #print(f"Byte {i} changed from {old} to {new}")
-
-    #prev_input_data = list(data)
 
 def sample_handler(data):
     global pressed_buttons, prev_start_state, prev_back_state
-
-    #debug_print_input_changes(data) 
 
     byte6 = data[ANALOG_BYTE_INDEX]
 
