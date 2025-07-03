@@ -20,7 +20,7 @@ BTYE_INDEX_YELLOW_CYMBAL = 47
 mapping = {
     BTYE_INDEX_GREEN_CYMBAL:  [Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_THUMB],
     BTYE_INDEX_BLUE_CYMBAL:   [Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_THUMB],
-    BTYE_INDEX_YELLOW_CYMBAL: [Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_BACK],  # NEW: yellow cymbal -> BACK
+    BTYE_INDEX_YELLOW_CYMBAL: [Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_BACK],
     BTYE_INDEX_RED_DRUM:      [Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_B],
     BTYE_INDEX_YELLOW_DRUM:   [Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_Y],
     BTYE_INDEX_BLUE_DRUM:     [Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_X],
@@ -30,37 +30,43 @@ mapping = {
 pad_check_indices = list(mapping.keys())
 
 pressed_buttons = set()
+music_pressed = set()
 dpad_buttons = set()
-prev_dpad = -1
 prev_kick_state = 0
 prev_analog_val = 0
 
-prev_start_state = False
-prev_back_state = False
+def handle_music_inputs(data):
+    global prev_kick_state, music_pressed
 
-def handle_music_inputs(data, current_pressed):
-    global prev_kick_state
+    new_music_pressed = set()
 
+    # Handle kick pedals
     kick_val = data[KICK_BYTE_INDEX]
-
     if kick_val == 1:
-        current_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
+        new_music_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
     elif kick_val == 2:
-        current_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
+        new_music_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
     elif kick_val == 3:
-        current_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
-        current_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
+        new_music_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
+        new_music_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
 
+    # Handle drums and cymbals
     for byte_offset, buttons in mapping.items():
         if byte_offset >= len(data):
             continue
         if data[byte_offset] > 0:
-            current_pressed.update(buttons)
+            new_music_pressed.update(buttons)
 
-    prev_kick_state = kick_val
+    # Immediate press/release for music buttons
+    for btn in music_pressed - new_music_pressed:
+        Gamepad.ReleaseButton(btn)
+    for btn in new_music_pressed - music_pressed:
+        Gamepad.PressButton(btn)
+
+    music_pressed = new_music_pressed
 
 def handle_dpad_and_face_buttons(data, current_pressed):
-    global prev_dpad, prev_analog_val, dpad_buttons
+    global dpad_buttons
 
     any_music_input = any(data[i] > 0 for i in pad_check_indices) or data[KICK_BYTE_INDEX] in (1, 2, 3)
 
@@ -110,38 +116,24 @@ def handle_dpad_and_face_buttons(data, current_pressed):
             Gamepad.ReleaseButton(btn)
         dpad_buttons.clear()
 
-    prev_analog_val = analog_val
-
 def handle_control_buttons(data, current_pressed):
     byte6 = data[ANALOG_BYTE_INDEX]
-
-    control_button_map = {
-        0x20: Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_START
-    }
-
-    for mask, btn in control_button_map.items():
-        if (byte6 & mask) != 0:
-            current_pressed.add(btn)
+    if (byte6 & 0x20) != 0:
+        current_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_START)
 
 def sample_handler(data):
-    global pressed_buttons, prev_start_state, prev_back_state
-
-    byte6 = data[ANALOG_BYTE_INDEX]
-    start_pressed = (byte6 & 0x20) != 0
-    back_pressed = (byte6 & 0x10) != 0
-
-    prev_start_state = start_pressed
-    prev_back_state = back_pressed
+    global pressed_buttons
 
     current_pressed = set()
 
-    handle_music_inputs(data, current_pressed)
+    handle_music_inputs(data)
     handle_dpad_and_face_buttons(data, current_pressed)
     handle_control_buttons(data, current_pressed)
 
     for btn in pressed_buttons - current_pressed:
-        if btn not in dpad_buttons:
+        if btn not in dpad_buttons and btn not in music_pressed:
             Gamepad.ReleaseButton(btn)
+
     for btn in current_pressed - pressed_buttons:
         Gamepad.PressButton(btn)
 

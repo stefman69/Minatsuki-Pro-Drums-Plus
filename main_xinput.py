@@ -47,22 +47,34 @@ def handle_music_inputs(data, current_pressed):
 
     kick_val = data[KICK_BYTE_INDEX]
 
-    if kick_val == 1:  
-        current_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
-    elif kick_val == 2:  
-        current_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
-    elif kick_val == 3:  
-        current_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
-        current_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
+    if kick_val != prev_kick_state:
+        if prev_kick_state == 1:
+            Gamepad.ReleaseButton(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
+        elif prev_kick_state == 2:
+            Gamepad.ReleaseButton(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
+        elif prev_kick_state == 3:
+            Gamepad.ReleaseButton(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
+            Gamepad.ReleaseButton(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
+
+        if kick_val == 1:
+            Gamepad.PressButton(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
+        elif kick_val == 2:
+            Gamepad.PressButton(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
+        elif kick_val == 3:
+            Gamepad.PressButton(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
+            Gamepad.PressButton(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
+
+        prev_kick_state = kick_val
 
     for byte_offset, buttons in mapping.items():
         if byte_offset >= len(data):
             continue
-        if data[byte_offset] > 0:
-            current_pressed.update(buttons)
-
-    prev_kick_state = kick_val
-    
+        is_pressed = data[byte_offset] > 0
+        for btn in buttons:
+            if is_pressed and btn not in pressed_buttons:
+                Gamepad.PressButton(btn)
+            elif not is_pressed and btn in pressed_buttons:
+                Gamepad.ReleaseButton(btn)
 
 def handle_dpad_and_face_buttons(data, current_pressed):
     global prev_dpad, prev_analog_val, dpad_buttons, last_dpad_val
