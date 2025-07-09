@@ -1,22 +1,19 @@
 import Gamepad
 import HIDInput
 
-# Music Input Indices
 BTYE_INDEX_RED_DRUM = 43
 BTYE_INDEX_YELLOW_DRUM = 45
 BTYE_INDEX_BLUE_DRUM = 44
 BTYE_INDEX_GREEN_DRUM = 46
-
 BTYE_INDEX_GREEN_CYMBAL = 49
 BTYE_INDEX_BLUE_CYMBAL = 48
 BTYE_INDEX_YELLOW_CYMBAL = 47
+BTYE_INDEX_PEDAL = 6
 
-# Control Button Indices
 BTYE_INDEX_ANALOG = 6
 BTYE_INDEX_DPAD = 5
 BTYE_INDEX_GUIDE = 7
 
-# Control Values
 VALUE_SHARE = 16
 VALUE_OPTIONS = 32
 VALUE_TRIANGLE = 136
@@ -24,7 +21,6 @@ VALUE_CIRCLE = 72
 VALUE_CROSS = 40
 VALUE_SQUARE = 24
 
-# Music Button Mapping (handled by old logic)
 music_mapping = {
     BTYE_INDEX_GREEN_CYMBAL: [Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_A, Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_THUMB],
     BTYE_INDEX_BLUE_CYMBAL:  [Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_X, Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_THUMB],
@@ -38,10 +34,8 @@ music_mapping = {
 music_keys_list = list(music_mapping)
 music_isHit_list = [0] * len(music_keys_list)
 
-# D-pad filtering (only allow dpad when no pads/cymbals are hit)
 dPadCheckList = list(music_mapping.keys())
 
-# Analog/DPad to control button mapping (new logic)
 analog_mapping = {
     VALUE_OPTIONS: Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_START,
     VALUE_SHARE:   Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_BACK,
@@ -51,15 +45,27 @@ analog_mapping = {
     VALUE_SQUARE:   Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_LEFT,
 }
 
-# State Tracking for New System
 pressed_buttons = set()
 dpad_buttons = set()
+prev_pedal_value = 0
 
 def handle_music_inputs(data):
+    global prev_pedal_value
+
+    pedal_val = data[BTYE_INDEX_PEDAL]
+    if pedal_val != prev_pedal_value:
+        if pedal_val == 1:
+            Gamepad.PressButtonOnce(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
+        elif pedal_val == 2:
+            Gamepad.PressButtonOnce(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
+        elif pedal_val == 3:
+            Gamepad.PressButtonOnce(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
+            Gamepad.PressButtonOnce(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
+    prev_pedal_value = pedal_val
+
     for index, byte_offset in enumerate(music_mapping):
         if byte_offset >= len(data):
             continue
-
         detection = data[byte_offset]
         button = music_mapping[byte_offset]
 
@@ -73,17 +79,14 @@ def handle_control_inputs(data, current_pressed):
     analog_val = data[BTYE_INDEX_ANALOG]
     guide_val = data[BTYE_INDEX_GUIDE]
 
-    # Start / Back
     if analog_val & VALUE_OPTIONS:
         current_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_START)
     if analog_val & VALUE_SHARE:
         current_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_BACK)
 
-    # Guide Button
     if guide_val & 0x01:
         current_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_GUIDE)
 
-    # Face Buttons (if present)
     face_map = {
         VALUE_TRIANGLE: Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_Y,
         VALUE_CIRCLE:   Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_B,
@@ -132,35 +135,22 @@ def handle_dpad(data):
 def sample_handler(data):
     global pressed_buttons
 
-    pedal_val = data[6]
-
-    if pedal_val == 1:
-        Gamepad.PressButtonOnce(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
-    elif pedal_val == 2:
-        Gamepad.PressButtonOnce(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
-    elif pedal_val == 3:
-        Gamepad.PressButtonOnce(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
-        Gamepad.PressButtonOnce(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
-
     current_pressed = set()
 
-    handle_music_inputs(data)
+    handle_music_inputs(data)  
     handle_control_inputs(data, current_pressed)
     handle_dpad(data)
 
-    # Release buttons no longer pressed
     for btn in pressed_buttons - current_pressed:
         if btn not in dpad_buttons:
             Gamepad.ReleaseButton(btn)
 
-    # Press new buttons
     for btn in current_pressed - pressed_buttons:
         Gamepad.PressButton(btn)
 
     pressed_buttons = current_pressed.copy()
     Gamepad.Update()
 
-# Main HID loop
 if __name__ == '__main__':
     import sys
     if sys.version_info >= (3,):
