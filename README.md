@@ -39,7 +39,7 @@ For gamepad use run this in your python terminal (recommended for programs like 
 
 `pip install vgamepad`
 
-There are two options for running the script with gamepad inputs. main_xinput.py emulates the Xbox360 pad setup where the cymbals are picked up using a combination of buttons (this is necessary for RPCS3 pro drums on Rock Band 3) The other option, main_xinputcs.py, splits the cymbals into different individual outputs just like the keyboard version, but this will output as buttons on an xinput controller instead. Make sure both of these files are in the same folder as the files from the Minatsuki github pages, or are all in your computers user folder. 
+There are two options for running the script with gamepad inputs. main_xinput.py emulates the Xbox360 pad setup where the cymbals are picked up using a combination of buttons (this is necessary for RPCS3 pro drums on Rock Band 3) unfortunately with this setup I am not currently able to get the face buttons (Cross, Triangle, Circle and Square) on the controller running, however the toms of the drumkit can be used in place of those buttons. The other option, main_xinputcs.py, splits the cymbals into different individual outputs just like the keyboard version, but this will output as buttons on an xinput controller instead. Make sure both of these files are in the same folder as the files from the Minatsuki github pages, or are all in your computers user folder. 
 
 You may also need to install the ViGEm bus driver for the virtual controller output, but since that was already installed before I set this up, I'm not 100% certain wether you do or not. You can download the ViGEm bus driver here: https://vigembusdriver.com/
 
