@@ -21,43 +21,43 @@ def send_note_on_off(note, velocity=100, channel=9, duration=0.1):
         send_note_off(note, channel)
     threading.Thread(target=worker, daemon=True).start()
 
-
 toms_to_midi_note = {
-    43: 38,  
-    44: 42,  
-    45: 46,  
-    46: 49,  
+    43: 38,  # red
+    44: 45,  # yellow
+    45: 48,  # blue
+    46: 41,  # green
 }
 
 cymbals_to_midi_note = {
-    47: 51,  
-    48: 45,  
-    49: 48,  
+    47: 22,  # yellow
+    48: 51,  # blue
+    49: 49,  # green
 }
 
-RIGHT_PEDAL_NOTE = 36  
-LEFT_PEDAL_NOTE = 44   
+# Track cymbal edge detection state (True if active)
+cymbal_states = {index: False for index in cymbals_to_midi_note}
 
-face_button_exact_map = {
-}
+RIGHT_PEDAL_NOTE = 33
+LEFT_PEDAL_NOTE = 44
 
+face_button_exact_map = {}
 
 control_button_bitmask_map = {
-    16: 64,  
-    32: 65,  
+    16: 64,  # share
+    32: 65,  # options
 }
 
 GUIDE_NOTE = 68
 
 dpad_map = {
-    0: 69,  
-    1: 70,  
-    2: 71,  
-    3: 72,  
-    4: 73,  
-    5: 74,  
-    6: 75,  
-    7: 76,  
+    0: 69,
+    1: 70,
+    2: 71,
+    3: 72,
+    4: 73,
+    5: 74,
+    6: 75,
+    7: 76,
 }
 
 prev_pedal_state = 0
@@ -70,6 +70,8 @@ def scale_255_to_127(value):
 
 def handle_drums_and_cymbals(data):
     active_hit = False
+
+    # Toms - always tap triggered
     for byte_index, midi_note in toms_to_midi_note.items():
         if byte_index < len(data):
             raw_velocity = data[byte_index]
@@ -78,12 +80,16 @@ def handle_drums_and_cymbals(data):
                 send_note_on_off(midi_note, scaled)
                 active_hit = True
 
+    # Cymbals - edge triggered
     for byte_index, midi_note in cymbals_to_midi_note.items():
         if byte_index < len(data):
             velocity = data[byte_index]
-            if 0 < velocity <= 127:
+            if velocity > 0 and not cymbal_states[byte_index]:
+                cymbal_states[byte_index] = True
                 send_note_on_off(midi_note, velocity)
                 active_hit = True
+            elif velocity == 0 and cymbal_states[byte_index]:
+                cymbal_states[byte_index] = False
 
     return active_hit
 
@@ -91,7 +97,6 @@ def handle_pedals(data):
     global pedal_note_state
 
     pedal_val = data[6] if len(data) > 6 else 0
-
     right_pressed = (pedal_val & 1) != 0
     left_pressed = (pedal_val & 2) != 0
 
@@ -113,10 +118,9 @@ def handle_buttons_and_dpad(data):
     pressed = set()
 
     byte5 = data[5] if len(data) > 5 else 0
-
-
     byte6 = data[6] if len(data) > 6 else 0
     byte7 = data[7] if len(data) > 7 else 0
+
     for mask, note in control_button_bitmask_map.items():
         if byte6 & mask:
             pressed.add(note)
