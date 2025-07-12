@@ -32,7 +32,7 @@ For gamepad use run this in your python terminal (recommended for programs like 
 
 pip install vgamepad
 
-There are two options for running the script with gamepad inputs. main_xinput.py emulates the Xbox360 pad setup where the cymbals are picked up using a combination of buttons (this is necessary for RPCS3 pro drums on Rock Band 3) unfortunately with this setup I am not currently able to get the face buttons (Cross, Triangle, Circle and Square) on the controller running, however the toms of the drumkit can be used in place of those buttons. The other option, main_xinputcs.py, splits the cymbals into different individual outputs just like the keyboard version, but this will output as buttons on an xinput controller instead. Make sure both of these files are in the same folder as the files from the Minatsuki github pages, or are all in your computers user folder. 
+There are two options for running the script with gamepad inputs. main_xinput.py emulates the Xbox360 pad setup where the cymbals are picked up using a combination of buttons (this is necessary for RPCS3 pro drums on Rock Band 3) unfortunately with this setup I am not currently able to get the green and blue cymbal working correctly with the toms, however that effects a very small number of songs. If you want better functionality with the drum and cymbals in Rock Band 3 on PC you can use the main_midi.py script. The other option, main_xinputcs.py, splits the cymbals into different individual outputs just like the keyboard version, but this will output as buttons on an xinput controller instead. This will not work with programs like RPCS3 or Xenia, but will work in Clone Hero and YARG. Make sure both of these files are in the same folder as the files from the Minatsuki github pages, or are all in your computers user folder. 
 
 You may also need to install the ViGEm bus driver for the virtual controller output, but since that was already installed before I set this up, I'm not 100% certain wether you do or not. You can download the ViGEm bus driver here: https://vigembusdriver.com/
 
@@ -51,7 +51,7 @@ Then select the corresponding number for your drum controller
 
 **Midi**
 
-For Midi use the setup is a bit more involved, but it does allow for the velocity of the instruments to be used which opens it up to more applications (I mostly made this for me to play around with using the drum kit in Ableton, but it could have several applications as Midi is a much more widely accepted format and it allows for velocity). You will need to run this in your python terminal once everything is set up:
+For Midi use the setup is a bit more involved, but it does allow for the velocity of the instruments to be used which opens it up to more applications (I mostly made this for me to play around with using the drum kit in Ableton, but it could have several applications as Midi is a much more widely accepted format and it allows for velocity). This setup is also necessary for better input handling in RPCS3. You will need to run this in your python terminal once everything is set up:
 
 pip install mido python-rtmidi
 
@@ -66,6 +66,9 @@ python main_midi.py
 
 Then select the corresponding number for your drum controller
 
-One caveat to the midi implementation is that there is no way to use the face buttons without breaking the toms and cymbals. If you really want the face buttons to be functinal you can use either of the xinput modules. This setup is primarily intended for use with music production software, however it may also be useful for rhythm games that can accept velocity inputs. 
+If you would like to use this in RPCS3 to play Rock Band 3, I really reccomend installing Rock Band 3 Deluxe and following their guide for setting up a midi controller found here: https://rb3pc.milohax.org/ctrls_drums_midi
+You will need to edit the rb3drums.yml and set the velocity detection lower, I am using 2 and that seems to work perfectly. I also had to change the combo triggers to three hi hat pressess to enable the start button, but if you do not have an additional pedal you can always use a controller plugged in as a microphone for navigation and control buttons. 
+
+One caveat to the midi implementation is that there is no way to use the face buttons without breaking the toms and cymbals. If you really want the face buttons to be functinal you can use either of the xinput modules. This setup is primarily intended for use with music production software and Rock Band 3, but can also be used in other rhythm games that allow for a midi controller setup.
 
 If you have any questions feel free to ask them here, but given that I don't code that often I may not see it here. However, I am always availible by Reddit DM's at u/cumbandicoot
