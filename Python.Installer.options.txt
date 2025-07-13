@@ -51,7 +51,7 @@ Then select the corresponding number for your drum controller
 
 **Midi**
 
-For Midi use the setup is a bit more involved, but it does allow for the velocity of the instruments to be used which opens it up to more applications (I mostly made this for me to play around with using the drum kit in Ableton, but it could have several applications as Midi is a much more widely accepted format and it allows for velocity). This setup is also necessary for better input handling in RPCS3. You will need to run this in your python terminal once everything is set up:
+For Midi use the setup is a bit more involved, but it does allow for the velocity of the instruments to be used which opens it up to more applications (I mostly made this for me to play around with using the drum kit in Ableton, but it could have several applications as Midi is a much more widely accepted format and it allows for velocity). This setup is also necessary for better input handling in RPCS3. There are two versions of the midi script as well. main_midi.py is setup how an e drum kit would be setup where the hi hat pedal plays a distinct note when opened or closed and main_midi-rpcs3.py os set up how it should be for Rock Band 3 where a closed hi hat plays a hi hat note (yellow) and an open one plays a ride (blue). You will need to run this in your python terminal once everything else is set up:
 
 pip install mido python-rtmidi
 
@@ -64,11 +64,15 @@ Once everything is properly set up, and both the files from the original Minatsu
 
 python main_midi.py
 
+or
+
+python main_midi_rpcs3.py
+
 Then select the corresponding number for your drum controller
 
 If you would like to use this in RPCS3 to play Rock Band 3, I really reccomend installing Rock Band 3 Deluxe and following their guide for setting up a midi controller found here: https://rb3pc.milohax.org/ctrls_drums_midi
-You will need to edit the rb3drums.yml and set the velocity detection lower, I am using 2 and that seems to work perfectly. I also had to change the combo triggers to three hi hat pressess to enable the start button, but if you do not have an additional pedal you can always use a controller plugged in as a microphone for navigation and control buttons. 
+You will need to edit the rb3drums.yml and set the velocity detection lower, I am using 1 and that seems to work perfectly. I also had to change the combo triggers to three hi hat pressess to enable the start button, but if you do not have an additional pedal you can always use a controller plugged in as a microphone for navigation and control buttons in most areas of the game, thou you will have to set it to drop out before selecting a song.
 
-One caveat to the midi implementation is that there is no way to use the face buttons without breaking the toms and cymbals. If you really want the face buttons to be functinal you can use either of the xinput modules. This setup is primarily intended for use with music production software and Rock Band 3, but can also be used in other rhythm games that allow for a midi controller setup.
+One caveat to the midi implementation is that there is no way to use the face buttons without breaking the toms and cymbals. If you really want the face buttons to be functinal you can use either of the xinput modules. This is only relaly applicable to using them as a midi controller though, but it's cool to set them up to cue samples. This setup is primarily intended for use with music production software and Rock Band 3, but can also be used in other rhythm games that allow for a midi controller setup.
 
 If you have any questions feel free to ask them here, but given that I don't code that often I may not see it here. However, I am always availible by Reddit DM's at u/cumbandicoot
