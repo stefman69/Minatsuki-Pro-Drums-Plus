@@ -80,19 +80,18 @@ def handle_drums_and_cymbals(data):
     for byte_index, midi_note in cymbals_to_midi_note.items():
         if byte_index < len(data):
             velocity = data[byte_index]
+            mapped_note = midi_note
 
-            if byte_index == 47:  # yellow cymbal
-                mapped_note = 42 if hi_hat_pedal_held else 46
-            else:
-                mapped_note = midi_note  # other cymbals
-    
+            # Flip: yellow cymbal = normal if closed, blue if open
+            if byte_index == 47 and not hi_hat_pedal_held:
+                mapped_note = cymbals_to_midi_note[48]  # treat as blue
+
             if velocity > 0 and not cymbal_states[byte_index]:
                 cymbal_states[byte_index] = True
                 send_note_on_off(mapped_note, velocity)
                 active_hit = True
             elif velocity == 0 and cymbal_states[byte_index]:
                 cymbal_states[byte_index] = False
-
 
     return active_hit
 
@@ -103,16 +102,24 @@ def handle_pedals(data):
     right_pressed = (pedal_val & 1) != 0
     left_pressed = (pedal_val & 2) != 0
 
-    # Update hi-hat state only — do not send MIDI for left pedal
+    # Update hi-hat hold state (left pedal)
     hi_hat_pedal_held = left_pressed
 
-    # Right pedal still sends MIDI notes
+    # Right pedal
     if right_pressed and not pedal_note_state['right']:
         send_note_on(RIGHT_PEDAL_NOTE, velocity=100)
         pedal_note_state['right'] = True
     elif not right_pressed and pedal_note_state['right']:
         send_note_off(RIGHT_PEDAL_NOTE)
         pedal_note_state['right'] = False
+
+    # Left pedal (hi-hat pedal)
+    if left_pressed and not pedal_note_state['left']:
+        send_note_on(LEFT_PEDAL_NOTE, velocity=100)
+        pedal_note_state['left'] = True
+    elif not left_pressed and pedal_note_state['left']:
+        send_note_off(LEFT_PEDAL_NOTE)
+        pedal_note_state['left'] = False
 
 def handle_buttons_and_dpad(data):
     pressed = set()
