@@ -58,13 +58,13 @@ Then select the corresponding number for your drum controller
 
 **Midi**
 
-For Midi use the setup is a bit more For Midi use the setup is a bit more involved, but it does allow for the velocity of the instruments to be used which opens it up to more applications (I mostly made this for me to play around with using the drum kit in Ableton, but it could have several applications as Midi is a much more widely accepted format and it allows for velocity). This setup is also necessary for better input handling in RPCS3. There are two versions of the midi script as well. main_midi.py is setup how an e drum kit would be setup where the hi hat pedal plays a distinct note when opened or closed and main_midi-rpcs3.py os set up how it should be for Rock Band 3 where a closed hi hat plays a hi hat note (yellow) and an open one plays a ride (blue). You will need to run this in your python terminal once everything else is set up:
+For Midi use the setup is a bit more involved, but it does allow for the velocity of the instruments to be used which opens it up to more applications (I mostly made this for me to play around with using the drum kit in Ableton, but it works for RPCS3 and Clone Hero too). This setup is also necessary for better input handling in RPCS3, and with main_midi_rpcs3.py you can use the hi hat pedal to change between yellow and blue on the hi hat cymbal, whereas the main_midi2.py will make the cymbal yellow either way. The main_midi.py script is setup how an e drum kit would be setup where the hi hat pedal plays a distinct note when opened or closed, different from the note of the blue cymbal. Type this in terminal once everything else is set up:
 
 `pip install mido python-rtmidi`
 
 (I want to note here that I also had to install Microsoft Visual Studio C++ for desktop development in order to get this install to work. Those can be found on Microsoft's website: https://visualstudio.microsoft.com/visual-cpp-build-tools/)
 
-You will also need to install a virtual midi device, which I set this up using loopmidi. You will need to need to name the device Virtual Drum Kit and press the plus button in the softwatre. Be sure that you open this application before running your python script. You can find loopmidi here:
+You will also need to install a virtual midi device, which I set this up using loopmidi. You will need to need to name the device Virtual Drum Kit and press the plus button in the softwatre. Be sure that you open this application before running your python script, or it will crash with an error. You can find loopmidi here:
 https://www.tobias-erichsen.de/software/loopmidi.html
 
 Once everything is properly set up, and both the files from the original Minatsuki github and this page are in the same folder or all in your windows user folder, you can run this in the target folder opened in terminal:
