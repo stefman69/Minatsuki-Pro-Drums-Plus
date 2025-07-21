@@ -40,7 +40,6 @@ def handle_music_inputs(data):
 
     new_music_pressed = set()
 
-    # Handle kick pedals
     kick_val = data[KICK_BYTE_INDEX]
     if kick_val == 1:
         new_music_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
@@ -50,14 +49,12 @@ def handle_music_inputs(data):
         new_music_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
         new_music_pressed.add(Gamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
 
-    # Handle drums and cymbals
     for byte_offset, buttons in mapping.items():
         if byte_offset >= len(data):
             continue
         if data[byte_offset] > 0:
             new_music_pressed.update(buttons)
 
-    # Immediate press/release for music buttons
     for btn in music_pressed - new_music_pressed:
         Gamepad.ReleaseButton(btn)
     for btn in new_music_pressed - music_pressed:
