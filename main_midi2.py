@@ -63,27 +63,35 @@ prev_pedal_state = 0
 pedal_note_state = {'left': False, 'right': False}
 last_data = None
 prev_buttons = set()
+tom_states = {index: False for index in toms_to_midi_note}
+cymbal_states = {index: False for index in cymbals_to_midi_note}
 
 def scale_255_to_127(value):
     return max(0, min(127, int(value * 127 / 255)))
 
 def handle_drums_and_cymbals(data):
     active_hit = False
+
     for byte_index, midi_note in toms_to_midi_note.items():
         if byte_index < len(data):
-            raw_velocity = data[byte_index]
-            if raw_velocity > 0:
-                scaled = scale_255_to_127(raw_velocity)
+            velocity = data[byte_index]
+            if velocity > 0 and not tom_states[byte_index]:
+                tom_states[byte_index] = True
+                scaled = scale_255_to_127(velocity)
                 send_note_on_off(midi_note, scaled)
                 active_hit = True
+            elif velocity == 0 and tom_states[byte_index]:
+                tom_states[byte_index] = False
 
     for byte_index, midi_note in cymbals_to_midi_note.items():
         if byte_index < len(data):
-            raw_velocity = data[byte_index]
-            if raw_velocity > 0:
-                scaled = scale_255_to_127(raw_velocity)
-                send_note_on_off(midi_note, scaled)
+            velocity = data[byte_index]
+            if velocity > 0 and not cymbal_states[byte_index]:
+                cymbal_states[byte_index] = True
+                send_note_on_off(midi_note, velocity)
                 active_hit = True
+            elif velocity == 0 and cymbal_states[byte_index]:
+                cymbal_states[byte_index] = False
 
     return active_hit
 
@@ -131,8 +139,8 @@ def handle_buttons_and_dpad(data):
 def sample_handler(data):
     global last_data, prev_buttons
 
-    active_hit = handle_drums_and_cymbals(data)
     handle_pedals(data)
+    handle_drums_and_cymbals(data)
 
     pressed = handle_buttons_and_dpad(data)
 

@@ -22,22 +22,22 @@ def send_note_on_off(note, velocity=100, channel=9, duration=0.1):
     threading.Thread(target=worker, daemon=True).start()
 
 toms_to_midi_note = {
-    43: 38,  # red
-    44: 45,  # yellow tom
-    45: 48,  # blue tom
-    46: 41,  # green tom
+    43: 38,  
+    44: 45,  
+    45: 48,  
+    46: 41,  
 }
 
 cymbals_to_midi_note = {
-    47: 22,  # yellow cymbal
-    48: 51,  # blue cymbal
-    49: 49,  # green cymbal
+    47: 22,
+    48: 51,  
+    49: 49,  
 }
 
-# State tracking
+
 cymbal_states = {index: False for index in cymbals_to_midi_note}
 pedal_note_state = {'left': False, 'right': False}
-hi_hat_pedal_held = False  # <- this is the LEFT pedal
+hi_hat_pedal_held = False
 last_data = None
 prev_buttons = set()
 
@@ -45,8 +45,8 @@ RIGHT_PEDAL_NOTE = 33
 LEFT_PEDAL_NOTE = 44
 
 control_button_bitmask_map = {
-    16: 64,  # share
-    32: 65,  # options
+    16: 64, 
+    32: 65, 
 }
 
 GUIDE_NOTE = 68
@@ -82,9 +82,8 @@ def handle_drums_and_cymbals(data):
             velocity = data[byte_index]
             mapped_note = midi_note
 
-            # Flip: yellow cymbal = normal if closed, blue if open
             if byte_index == 47 and not hi_hat_pedal_held:
-                mapped_note = cymbals_to_midi_note[48]  # treat as blue
+                mapped_note = cymbals_to_midi_note[48]
 
             if velocity > 0 and not cymbal_states[byte_index]:
                 cymbal_states[byte_index] = True
@@ -102,10 +101,8 @@ def handle_pedals(data):
     right_pressed = (pedal_val & 1) != 0
     left_pressed = (pedal_val & 2) != 0
 
-    # Update hi-hat hold state (left pedal)
     hi_hat_pedal_held = left_pressed
 
-    # Right pedal
     if right_pressed and not pedal_note_state['right']:
         send_note_on(RIGHT_PEDAL_NOTE, velocity=100)
         pedal_note_state['right'] = True
@@ -113,7 +110,6 @@ def handle_pedals(data):
         send_note_off(RIGHT_PEDAL_NOTE)
         pedal_note_state['right'] = False
 
-    # Left pedal (hi-hat pedal)
     if left_pressed and not pedal_note_state['left']:
         send_note_on(LEFT_PEDAL_NOTE, velocity=100)
         pedal_note_state['left'] = True
@@ -142,7 +138,7 @@ def handle_buttons_and_dpad(data):
 def sample_handler(data):
     global last_data, prev_buttons
 
-    handle_pedals(data)  # MUST come first for hi-hat pedal state
+    handle_pedals(data) 
     handle_drums_and_cymbals(data)
 
     pressed = handle_buttons_and_dpad(data)
@@ -153,7 +149,6 @@ def sample_handler(data):
         send_note_on(note)
     prev_buttons = pressed
 
-    # Debug byte changes
     if last_data is None:
         last_data = list(data)
     else:
